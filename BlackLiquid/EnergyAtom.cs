@@ -41,9 +41,8 @@ namespace BlackLiquid
             switch(a)
             {
                 case MotorAtom:
-                    Debug.WriteLine("Sending energy to motor");
                     var m = (MotorAtom)a;
-                    share = Math.Min(r.Next(energy), 100 - m.energy);
+                    share = Math.Min(r.Next(energy), m.energyMax - m.energy);
                     m.energy += share;
                     energy -= share;
                     break;

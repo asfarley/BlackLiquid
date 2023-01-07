@@ -13,5 +13,11 @@ namespace BlackLiquid
         {
             PixelBrush = System.Windows.Media.Brushes.Gray;
         }
+
+        public override void Interact(Atom a)
+        {
+            
+            
+        }
     }
 }

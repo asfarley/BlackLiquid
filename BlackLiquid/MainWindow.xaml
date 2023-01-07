@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlackLiquid"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
+        Title="MainWindow" Height="580" Width="800">
+    <StackPanel>
+        <Button Width="100" Margin="10 10 10 10" Click="Button_Click">Restart</Button>
         <ListView ItemsSource="{Binding World.Atoms}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
@@ -27,10 +27,10 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Rectangle Width="5" Height="5" Fill="{Binding PixelBrush}"></Rectangle>
+                    <Rectangle Width="2" Height="2" Fill="{Binding PixelBrush}"></Rectangle>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-    </Grid>
+    </StackPanel>
 </Window>

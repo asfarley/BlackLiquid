@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace BlackLiquid
 {
@@ -39,6 +40,8 @@ namespace BlackLiquid
             set { world = value; NotifyPropertyChanged(); }
         }
 
+        private DispatcherTimer updateTimer;
+
         public MainWindow()
         {
             DataContext = this;
@@ -46,9 +49,9 @@ namespace BlackLiquid
 
             World.Initialize();
 
-            System.Windows.Threading.DispatcherTimer updateTimer = new System.Windows.Threading.DispatcherTimer();
+            updateTimer = new System.Windows.Threading.DispatcherTimer();
             updateTimer.Tick += updateTimer_Tick;
-            updateTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            updateTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             updateTimer.Start();
         }
 
@@ -64,6 +67,13 @@ namespace BlackLiquid
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            updateTimer.Stop();
+            World.Initialize();
+            updateTimer.Start();
         }
     }
 }

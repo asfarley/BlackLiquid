@@ -14,11 +14,17 @@ namespace BlackLiquid
     public class SimulationWorld: ActiveObject
     {
         private ObservableCollection<Atom> atoms = new ObservableCollection<Atom>();
-
         public ObservableCollection<Atom> Atoms
         {
             get { return atoms; }
             set { atoms = value; NotifyPropertyChanged(); }
+        }
+
+        private ObservableCollection<EnergySource> energySources = new ObservableCollection<EnergySource>();
+        public ObservableCollection<EnergySource> EnergySources
+        {
+            get { return energySources; }
+            set { energySources = value; NotifyPropertyChanged(); }
         }
 
         private Random random = new Random();
@@ -29,7 +35,7 @@ namespace BlackLiquid
                 atom.Update();
             }
 
-            for(int i=0;i<1000;i++)
+            for(int i=0;i<10000;i++)
             {
                 int a1index = random.Next(atoms.Count);
                 int a2index = random.Next(atoms.Count);
@@ -42,34 +48,101 @@ namespace BlackLiquid
 
         public void Initialize()
         {
-            Random r = new Random();
-            for(int i= 0; i < 300; i++)
+            Atoms.Clear();
+            InitializeStructureAtoms();
+            InitializeEnergySources();
+            InitializeMotorAtoms();
+            InitializeInfoAtoms();
+        }
+
+        public void InitializeStructureAtoms()
+        {
+            int maxStructureSeeds = 100;
+            int numStructureSeeds = random.Next(1, maxStructureSeeds);
+
+            int maxStructureAtoms = (int)( 640 * 480 * 0.1);
+
+            var structureSeeds = new List<Atom>();
+
+            for (int i = 0; i < numStructureSeeds; i++)
             {
-                Atom a = null;
-                var atomTypeRand = r.Next(4);
-                switch(atomTypeRand)
-                {
-                    case 0:
-                        a = new InfoAtom();
-                        break;
-                    case 1:
-                        a = new EnergyAtom();
-                        break;
-                    case 2:
-                        a = new StructureAtom();
-                        break;
-                    case 3:
-                        a = new MotorAtom();
-                        break;
-                    default:
-                        a = new StructureAtom();
-                        break;
-                }
-                
-                a.X = r.Next(640);
-                a.Y = r.Next(480);
-                atoms.Add(a);
+                var sa = new StructureAtom();
+                sa.X = random.Next(640);
+                sa.Y = random.Next(480);
+                structureSeeds.Add(sa);
             }
+
+            int maxGrowthCycles = 20;
+            int numGrowthCycles = random.Next(maxGrowthCycles);
+
+            int nStructureAtoms = 0;
+
+            for(int i=0;i<numGrowthCycles;i++)
+            {
+                var newStructureAtoms = new List<Atom>();
+                foreach (var s in structureSeeds)
+                {
+                    var s_new = new StructureAtom();
+                    s_new.X = s.X + random.Next(-1, 2);
+                    s_new.Y = s.Y + random.Next(-1, 2);
+                    var blocked = structureSeeds.Any(s => s.X == s_new.X && s.Y == s_new.Y);
+                    var outOfrange = s_new.X > 639 || s_new.X < 0 || s_new.Y > 479 || s_new.Y < 0;
+                    if(!blocked && !outOfrange)
+                    {
+                        newStructureAtoms.Add(s_new);
+                        nStructureAtoms++;
+                        if (nStructureAtoms >= maxStructureAtoms)
+                        {
+                            break;
+                        }
+                    }
+                    
+                }
+                structureSeeds.AddRange(newStructureAtoms);
+
+                if (nStructureAtoms >= maxStructureAtoms)
+                {
+                    break;
+                }
+            }
+
+            foreach(var a in structureSeeds)
+            {
+                Atoms.Add(a);
+            }
+        }
+
+        public void InitializeMotorAtoms()
+        {
+            
+        }
+
+        public void InitializeEnergySources()
+        {
+            int maxEnergySources = 100;
+            int nEnergySources = random.Next(maxEnergySources);
+
+            for(int i=0;i<nEnergySources;i++)
+            {
+                var es = new EnergySource();
+                es.X = random.Next(640);
+                es.Y = random.Next(480);
+                es.PowerOutput = random.NextDouble();
+                if(PositionIsFree(es.X, es.Y))
+                {
+                    Atoms.Add(es);
+                }
+            }
+        }
+
+        public bool PositionIsFree(int x, int y)
+        {
+            return !Atoms.Any(a => a.X== x && a.Y == y);
+        }
+
+        public void InitializeInfoAtoms()
+        {
+
         }
 
         public void Interact(Atom a1, Atom a2)
