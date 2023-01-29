@@ -26,6 +26,8 @@ namespace BlackLiquid
     {
         private Image state;
 
+
+
         public Image State
         {
             get { return state; }
@@ -38,6 +40,22 @@ namespace BlackLiquid
         {
             get {  return world; }
             set { world = value; NotifyPropertyChanged(); }
+        }
+
+        public int ImageWidth
+        {
+            get
+            {
+                return GlobalConstants.Width;
+            }
+        }
+
+        public int ImageHeight
+        {
+            get
+            {
+                return GlobalConstants.Width;
+            }
         }
 
         private DispatcherTimer updateTimer;

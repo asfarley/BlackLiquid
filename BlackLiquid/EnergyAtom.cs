@@ -43,7 +43,8 @@ namespace BlackLiquid
             {
                 case MotorAtom:
                     var m = (MotorAtom)a;
-                    share = Math.Min(r.Next(energy), m.energyMax - m.energy);
+                    //share = Math.Min(r.Next(energy), m.energyMax - m.energy);
+                    share = Math.Max(energy - m.energy, 0);
                     m.energy += share;
                     energy -= share;
                     break;

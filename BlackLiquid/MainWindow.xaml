@@ -21,8 +21,8 @@
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="Black" IsItemsHost="True"
-                            Width="640"
-                            Height="480"/>
+                            Width="{Binding ImageWidth}"
+                            Height="{Binding ImageHeight}"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>

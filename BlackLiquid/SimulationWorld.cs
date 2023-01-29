@@ -69,15 +69,15 @@ namespace BlackLiquid
             int maxStructureSeeds = 100;
             int numStructureSeeds = random.Next(1, maxStructureSeeds);
 
-            int maxStructureAtoms = (int)( 640 * 480 * 0.1);
+            int maxStructureAtoms = (int)( GlobalConstants.Width * GlobalConstants.Height * 0.1);
 
             var structureSeeds = new List<Atom>();
 
             for (int i = 0; i < numStructureSeeds; i++)
             {
                 var sa = new StructureAtom();
-                sa.X = random.Next(640);
-                sa.Y = random.Next(480);
+                sa.X = random.Next(GlobalConstants.Width);
+                sa.Y = random.Next(GlobalConstants.Height);
                 structureSeeds.Add(sa);
             }
 
@@ -95,7 +95,7 @@ namespace BlackLiquid
                     s_new.X = s.X + random.Next(-1, 2);
                     s_new.Y = s.Y + random.Next(-1, 2);
                     var blocked = structureSeeds.Any(s => s.X == s_new.X && s.Y == s_new.Y);
-                    var outOfrange = s_new.X > 639 || s_new.X < 0 || s_new.Y > 479 || s_new.Y < 0;
+                    var outOfrange = s_new.X >= GlobalConstants.Width || s_new.X < 0 || s_new.Y >= GlobalConstants.Height || s_new.Y < 0;
                     if(!blocked && !outOfrange)
                     {
                         newStructureAtoms.Add(s_new);
@@ -130,11 +130,11 @@ namespace BlackLiquid
             for (int i = 0; i < nMotorAtoms; i++)
             {
                 var es = new MotorAtom();
-                es.X = random.Next(640);
-                es.Y = random.Next(480);
+                es.X = random.Next(GlobalConstants.Width);
+                es.Y = random.Next(GlobalConstants.Height);
                 es.energy = 20;
                 es.energyMax = 20;
-                if (Atoms.PositionIsFree(es.X, es.Y, 640, 480))
+                if (Atoms.PositionIsFree(es.X, es.Y, GlobalConstants.Width, GlobalConstants.Height))
                 {
                     Atoms.Add(es);
                 }
@@ -150,10 +150,10 @@ namespace BlackLiquid
             for(int i=0;i<nEnergySources;i++)
             {
                 var es = new EnergySource();
-                es.X = random.Next(640);
-                es.Y = random.Next(480);
+                es.X = random.Next(GlobalConstants.Width);
+                es.Y = random.Next(GlobalConstants.Height);
                 es.PowerOutput = random.NextDouble();
-                if(Atoms.PositionIsFree(es.X, es.Y, 640, 480))
+                if(Atoms.PositionIsFree(es.X, es.Y, GlobalConstants.Width, GlobalConstants.Height))
                 {
                     Atoms.Add(es);
                 }

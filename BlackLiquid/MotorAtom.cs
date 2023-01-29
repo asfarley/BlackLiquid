@@ -92,7 +92,9 @@ namespace BlackLiquid
                     break;
                 case InfoAtom:
                     break;
-                default: //Pushing effect
+                case EnergySource:
+                    break;
+                case StructureAtom: //Pushing effect
                     if (a.X >= X)
                     {
                         X += movement;

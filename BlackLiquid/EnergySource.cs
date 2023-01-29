@@ -29,7 +29,7 @@ namespace BlackLiquid
                 var energy = new EnergyAtom();
                 energy.X = X + r.Next(-1, 2);
                 energy.Y = Y + r.Next(-1, 2);
-                if(atoms.PositionIsFree(energy.X, energy.Y, 640, 480))
+                if(atoms.PositionIsFree(energy.X, energy.Y, GlobalConstants.Width, GlobalConstants.Height))
                 {
                     ad.NewAtoms.Add(energy);
                 }
