@@ -42,17 +42,14 @@ namespace BlackLiquid
                 }
             }
 
-            for (int i=0;i<10000;i++)
+            for (int i=0;i<100000;i++)
             {
                 int a1index = random.Next(atoms.Count);
                 int a2index = random.Next(atoms.Count);
                 var a1 = atoms[a1index];
                 var a2 = atoms[a2index];
-                //Debug.WriteLine("Interacting: " + a1index + " and " + a2index);
                 Interact(a1, a2);
             }
-
-           
         }
 
         public void Initialize()
@@ -66,7 +63,7 @@ namespace BlackLiquid
 
         public void InitializeStructureAtoms()
         {
-            int maxStructureSeeds = 100;
+            int maxStructureSeeds = 400;
             int numStructureSeeds = random.Next(1, maxStructureSeeds);
 
             int maxStructureAtoms = (int)( GlobalConstants.Width * GlobalConstants.Height * 0.1);
@@ -123,8 +120,8 @@ namespace BlackLiquid
 
         public void InitializeMotorAtoms()
         {
-            int maxMotorAtoms = 1000;
-            int minMotorAtoms = 200;
+            int maxMotorAtoms = 4000;
+            int minMotorAtoms = 800;
             int nMotorAtoms = random.Next(minMotorAtoms, maxMotorAtoms);
 
             for (int i = 0; i < nMotorAtoms; i++)
@@ -132,7 +129,7 @@ namespace BlackLiquid
                 var es = new MotorAtom();
                 es.X = random.Next(GlobalConstants.Width);
                 es.Y = random.Next(GlobalConstants.Height);
-                es.energy = 20;
+                es.energy = 0;
                 es.energyMax = 20;
                 if (Atoms.PositionIsFree(es.X, es.Y, GlobalConstants.Width, GlobalConstants.Height))
                 {
@@ -143,8 +140,8 @@ namespace BlackLiquid
 
         public void InitializeEnergySources()
         {
-            int maxEnergySources = 200;
-            int minEnergySources = 50;
+            int maxEnergySources = 1000;
+            int minEnergySources = 200;
             int nEnergySources = random.Next(minEnergySources, maxEnergySources);
 
             for(int i=0;i<nEnergySources;i++)

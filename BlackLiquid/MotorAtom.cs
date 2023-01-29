@@ -10,7 +10,7 @@ namespace BlackLiquid
 {
     public class MotorAtom : Atom
     {
-        public int energy = 20;
+        public int energy = 0;
         public int energyMax = 30;
 
         private Random r = new Random();

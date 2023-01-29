@@ -5,32 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlackLiquid"
         mc:Ignorable="d"
-        Title="MainWindow" Height="580" Width="800">
-    <StackPanel>
+        MouseWheel="Window_MouseWheel"
+        Title="MainWindow" MinHeight="1080" MinWidth="1920">
+    
+    <StackPanel Orientation="Vertical">
         <Button Width="100" Margin="10 10 10 10" Click="Button_Click">Restart</Button>
-        <ListView ItemsSource="{Binding World.Atoms}">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="Canvas.Left"
+        <Border BorderBrush="Black" BorderThickness="1" Name="DrawingBorder" >
+            <StackPanel Orientation="Horizontal" Name="DrawingContainer">
+                <ListBox Width="1920" Height="1080"  Focusable="True" SelectionMode="Multiple" Name="CanvasListBox" ItemsSource="{Binding World.Atoms}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Disabled" PreviewMouseWheel="ListBox_PreviewMouseWheel" MouseMove="ListBox_MouseMove" MouseDown="Canvas_MouseDown" MouseUp="Canvas_MouseUp"
+                 >
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Canvas.Left"
                             Value="{Binding X}"/>
-                    <Setter Property="Canvas.Top"
+                            <Setter Property="Canvas.Top"
                             Value="{Binding Y}"/>
-                    
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas Background="Black" IsItemsHost="True"
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas IsItemsHost="True" Focusable="True" IsEnabled="True"
                             Width="{Binding ImageWidth}"
-                            Height="{Binding ImageHeight}"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Rectangle Width="2" Height="2" Fill="{Binding PixelBrush}"></Rectangle>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-
+                            Height="{Binding ImageHeight}"
+                            Background="Black"
+                            MouseMove="Canvas_MouseMove" MouseDown="Canvas_MouseDown" MouseUp="Canvas_MouseUp" Name="MainCanvas" Loaded="MainCanvas_Loaded" >
+                                <Canvas.RenderTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform  x:Name="canvasTranslateTransform"
+                                        X="{Binding TranslateX}"
+                                        Y="{Binding TranslateY}"/>
+                                        <ScaleTransform  x:Name="canvasScaleTransform"
+                                        ScaleX="{Binding ZoomFactor}"
+                                        ScaleY="{Binding ZoomFactor}"/>
+                                    </TransformGroup>
+                                </Canvas.RenderTransform>
+                            </Canvas>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Rectangle Width="1" Height="1" Fill="{Binding PixelBrush}"></Rectangle>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </Border>
     </StackPanel>
 </Window>

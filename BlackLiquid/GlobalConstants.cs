@@ -8,7 +8,7 @@ namespace BlackLiquid
 {
     public static class GlobalConstants
     {
-        public static int Width = 640;
-        public static int Height = 480;
+        public static int Width = 1920;
+        public static int Height = 1080;
     }
 }
