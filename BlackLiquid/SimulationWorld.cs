@@ -13,29 +13,36 @@ namespace BlackLiquid
 {
     public class SimulationWorld: ActiveObject
     {
-        private ObservableCollection<Atom> atoms = new ObservableCollection<Atom>();
-        public ObservableCollection<Atom> Atoms
+        private AtomCollection atoms = new AtomCollection();
+        public AtomCollection Atoms
         {
             get { return atoms; }
             set { atoms = value; NotifyPropertyChanged(); }
         }
 
-        private ObservableCollection<EnergySource> energySources = new ObservableCollection<EnergySource>();
-        public ObservableCollection<EnergySource> EnergySources
-        {
-            get { return energySources; }
-            set { energySources = value; NotifyPropertyChanged(); }
-        }
-
         private Random random = new Random();
         public void Update()
         {
+            var deltas = new List<AtomsDelta>();
             foreach(var atom in atoms)
             {
-                atom.Update();
+                var ad = atom.Update(atoms);
+                deltas.Add(ad);
             }
 
-            for(int i=0;i<10000;i++)
+            foreach(var ad in deltas)
+            {
+                foreach (var a in ad.NewAtoms)
+                {
+                    Atoms.Add(a);
+                }
+                foreach (var a in ad.DeletedAtoms)
+                {
+                    Atoms.Remove(a);
+                }
+            }
+
+            for (int i=0;i<10000;i++)
             {
                 int a1index = random.Next(atoms.Count);
                 int a2index = random.Next(atoms.Count);
@@ -44,6 +51,8 @@ namespace BlackLiquid
                 //Debug.WriteLine("Interacting: " + a1index + " and " + a2index);
                 Interact(a1, a2);
             }
+
+           
         }
 
         public void Initialize()
@@ -114,13 +123,29 @@ namespace BlackLiquid
 
         public void InitializeMotorAtoms()
         {
-            
+            int maxMotorAtoms = 1000;
+            int minMotorAtoms = 200;
+            int nMotorAtoms = random.Next(minMotorAtoms, maxMotorAtoms);
+
+            for (int i = 0; i < nMotorAtoms; i++)
+            {
+                var es = new MotorAtom();
+                es.X = random.Next(640);
+                es.Y = random.Next(480);
+                es.energy = 20;
+                es.energyMax = 20;
+                if (Atoms.PositionIsFree(es.X, es.Y, 640, 480))
+                {
+                    Atoms.Add(es);
+                }
+            }
         }
 
         public void InitializeEnergySources()
         {
-            int maxEnergySources = 100;
-            int nEnergySources = random.Next(maxEnergySources);
+            int maxEnergySources = 200;
+            int minEnergySources = 50;
+            int nEnergySources = random.Next(minEnergySources, maxEnergySources);
 
             for(int i=0;i<nEnergySources;i++)
             {
@@ -128,17 +153,14 @@ namespace BlackLiquid
                 es.X = random.Next(640);
                 es.Y = random.Next(480);
                 es.PowerOutput = random.NextDouble();
-                if(PositionIsFree(es.X, es.Y))
+                if(Atoms.PositionIsFree(es.X, es.Y, 640, 480))
                 {
                     Atoms.Add(es);
                 }
             }
         }
 
-        public bool PositionIsFree(int x, int y)
-        {
-            return !Atoms.Any(a => a.X== x && a.Y == y);
-        }
+
 
         public void InitializeInfoAtoms()
         {
@@ -157,7 +179,17 @@ namespace BlackLiquid
                 return;
             }
 
-            a1.Interact(a2);
+            var ad = a1.Interact(a2, Atoms);
+
+            foreach(var a in ad.NewAtoms)
+            {
+                Atoms.Add(a);
+            }
+
+            foreach(var a in ad.DeletedAtoms)
+            {
+                Atoms.Remove(a);
+            }
         }
     }
 }

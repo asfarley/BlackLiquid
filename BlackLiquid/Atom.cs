@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BlackLiquid
 {
-    public class Atom : ActiveObject
+    public abstract class Atom : ActiveObject
     {
         private int x;
         public int X
@@ -36,14 +37,14 @@ namespace BlackLiquid
             }
         }
 
-        public virtual void Update()
+        public virtual AtomsDelta Update(AtomCollection atoms)
         {
-
+            return new AtomsDelta();
         }
 
-        public virtual void Interact(Atom a)
+        public virtual AtomsDelta Interact(Atom a, AtomCollection atoms)
         {
-
+            return new AtomsDelta();
         }
     }
 }
